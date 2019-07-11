@@ -8,7 +8,7 @@ import './MainView.css';
 
 // Dynamic composition: The composition is created when the render method is executed
 // Total isolation between wrapping behavior and whats inside. No communication
-class WithBorder extends React.Component {
+class WithBorder2 extends React.Component {
   constructor(props) {
     super();
   
@@ -38,6 +38,42 @@ class WithBorder extends React.Component {
     );
   }
 }
+
+const withState = (InnerComp) => class OuterComp extends React.Component {
+  constructor(props) {
+    super();
+
+    this.state = {
+      myState: props.initialStateValue
+    };
+  }
+
+  updateState = (newValue) => this.setState({ myState: newValue });
+
+  render() {
+    console.log(this.state);
+    const innerCompProps = {
+      stateValue: this.state.myState,
+      updateState: this.updateState
+    }
+    return (
+      <InnerComp {...this.props} {...innerCompProps} />
+    )
+  }
+}
+
+const StatelessWithBorder = props => (
+  <div
+    className='withBorder'
+    style={{ borderColor: props.stateValue }}
+    onMouseEnter={() => props.updateState('#000')}
+    onMouseLeave={() => props.updateState(props.color)}
+  >
+    {props.children}
+  </div>
+)
+
+const WithBorder = withState(StatelessWithBorder);
 
 // Static Composition: The composition is now created during class creation time and not the render time
 // Repackage into a new Component
