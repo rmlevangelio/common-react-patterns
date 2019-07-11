@@ -1,0 +1,17 @@
+.mainContainer {
+  display: flex;
+}
+
+.withBorder {
+  border: 5px solid #000;
+  padding: 20px;
+}
+
+.tableContainer, .tagsContainer {
+  width: 600px;
+  margin: 20px;
+}
+
+.tagsContainer {
+  margin-top: 200px;
+}
