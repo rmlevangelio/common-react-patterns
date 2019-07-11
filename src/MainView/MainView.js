@@ -73,6 +73,8 @@ const StatelessWithBorder = props => (
   </div>
 )
 
+// Dynamic With State
+
 const WithBorder = withState(StatelessWithBorder);
 
 // Static Composition: The composition is now created during class creation time and not the render time
@@ -123,13 +125,37 @@ export class MainView extends React.Component {
           />
         </div>
         <div className='tagsContainer'>
-          <TagsWithBorder
-            color={this.props.color}
-            value={this.props.tags}
-            onChange={this.updateTags}
-          />
+          {/* Render Callback or this.props.children as function */}
+          <DynamicWithState>
+            {(stateValue, stateUpdater) => (
+              <StatelessWithBorder
+                stateValue={stateValue}
+                updateState={stateUpdater}
+                color={this.props.color}
+              >
+                <TagsInput value={this.props.tags} onChange={this.updateTags} />
+              </StatelessWithBorder>
+            )
+            }
+          </DynamicWithState>
         </div>
       </div>
     );
+  }
+}
+
+class DynamicWithState extends React.Component {
+  constructor(props) {
+    super();
+
+    this.state = {
+      myState: props.initialState,
+    }
+  }
+
+  updateState = (newValue) => this.setState({ myState: newValue })
+
+  render() {
+    return this.props.children(this.state.myState, this.updateState);
   }
 }
